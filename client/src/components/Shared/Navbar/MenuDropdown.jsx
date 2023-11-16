@@ -1,12 +1,22 @@
 import { AiOutlineMenu } from 'react-icons/ai'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import useAuth from '../../../hooks/useAuth'
 import avatarImg from '../../../assets/images/placeholder.jpg'
+import toast from 'react-hot-toast'
 
 const MenuDropdown = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const { user } = useAuth()
+  const { user, logOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogOut = () => {
+    logOut()
+      .then(() => {
+        toast.success('Logout successful.')
+        navigate('/login')
+      })
+  }
 
   return (
     <div className='relative'>
@@ -46,18 +56,35 @@ const MenuDropdown = () => {
               Home
             </Link>
 
-            <Link
-              to='/login'
-              className='px-4 py-3 hover:bg-neutral-100 transition font-semibold'
-            >
-              Login
-            </Link>
-            <Link
-              to='/signup'
-              className='px-4 py-3 hover:bg-neutral-100 transition font-semibold'
-            >
-              Sign Up
-            </Link>
+            {
+              user ? <>
+                <Link
+                  to='/dashboard'
+                  className='px-4 py-3 hover:bg-neutral-100 transition font-semibold'
+                >
+                  Dashboard
+                </Link>
+                <div
+                  onClick={handleLogOut}
+                  className='px-4 py-3 hover:bg-neutral-100 transition font-semibold'
+                >
+                  Log out
+                </div>
+              </> : <>
+                <Link
+                  to='/login'
+                  className='px-4 py-3 hover:bg-neutral-100 transition font-semibold'
+                >
+                  Login
+                </Link>
+                <Link
+                  to='/signup'
+                  className='px-4 py-3 hover:bg-neutral-100 transition font-semibold'
+                >
+                  Sign Up
+                </Link>
+              </>
+            }
           </div>
         </div>
       )}

@@ -3,7 +3,7 @@ const app = express()
 require('dotenv').config()
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
-const { MongoClient, ServerApiVersion } = require('mongodb')
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 const jwt = require('jsonwebtoken')
 const morgan = require('morgan') //new things
 const port = process.env.PORT || 8000
@@ -42,10 +42,17 @@ const client = new MongoClient(process.env.DB_URI, {
   },
 })
 async function run() {
+
+  const database = client.db("stayVistaDb");
+  const usersCollection = database.collection("users");
+
+
+
   try {
     // auth related api
     app.post('/jwt', async (req, res) => {
-      const user = req.body
+      const user = req?.body  //as an object
+      console.log(user)
       console.log('I need a new jwt', user)
       const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: '365d',
@@ -79,6 +86,7 @@ async function run() {
     app.put('/users/:email', async (req, res) => {
       const email = req.params.email
       const user = req.body
+      console.log(user, email)
       const query = { email: email }
       const options = { upsert: true }
       const isExist = await usersCollection.findOne(query)

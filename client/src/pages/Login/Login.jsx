@@ -1,7 +1,64 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { FcGoogle } from 'react-icons/fc'
+import useSecureAxios from '../../hooks/useSecureAxios';
+import toast from 'react-hot-toast';
+import useGlobal from '../../hooks/useGlobal';
+import { TbFidgetSpinner } from 'react-icons/tb';
 
 const Login = () => {
+  const location = useLocation();
+  const secureAxios = useSecureAxios();
+
+  const { signIn, signInWithGoogle, loading, setLoading } = useGlobal();
+  const navigate = useNavigate();
+
+  const handleGoogle = async () => {
+    const user = await signInWithGoogle();
+
+    const currrentUser = {
+      email: user?.user?.email,
+      role: 'guest',
+      status: 'verified'
+    }
+    const dbRes = await secureAxios.put(`/users/${user?.user?.email}`, currrentUser)
+    console.log('saved to db', dbRes);
+    toast.success('Login successful.')
+
+    setLoading(false)
+
+    navigate(location?.state?.from?.pathname || '/', { replace: true })
+  }
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
+
+    try {
+      setLoading(true)
+      // user registration
+      const user = await signIn(email, password);
+
+      toast.success('Login successful.')
+
+      setLoading(false)
+
+      navigate(location?.state?.from?.pathname || '/', { replace: true })
+
+      // token should be control from a central place like onAuthStateChanged
+
+    } catch (error) {
+      console.log(error)
+      toast.error(error.mesage)
+    }
+    // >>>>>>>>>>>>>>>image Operation<<<<<<<<<<<<<
+
+
+    console.log('im waiting for the image to be upload')
+
+  }
+
   return (
     <div className='flex justify-center items-center min-h-screen'>
       <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
@@ -12,6 +69,7 @@ const Login = () => {
           </p>
         </div>
         <form
+          onClick={handleSubmit}
           noValidate=''
           action=''
           className='space-y-6 ng-untouched ng-pristine ng-valid'
@@ -54,7 +112,9 @@ const Login = () => {
               type='submit'
               className='bg-rose-500 w-full rounded-md py-3 text-white'
             >
-              Continue
+              {
+                loading ? <TbFidgetSpinner className='animate-spin m-auto text-lg' /> : 'Continue'
+              }
             </button>
           </div>
         </form>
@@ -70,7 +130,7 @@ const Login = () => {
           </p>
           <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
         </div>
-        <div className='flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'>
+        <div onClick={handleGoogle} className='flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'>
           <FcGoogle size={32} />
 
           <p>Continue with Google</p>
