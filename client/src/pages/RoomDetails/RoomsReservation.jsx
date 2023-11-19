@@ -1,12 +1,21 @@
 /* eslint-disable react/prop-types */
 // import { formatDistance } from "date-fns"
+import { useState } from "react"
 import Button from "../../components/Button/Button"
 import Calender from "./Calender"
+import { formatDistance } from "date-fns"
+
 
 const RoomsReservation = ({ room }) => {
 
-    // const totalDays = parseFloat(formatDistance(new Date(room?.to), new Date(room?.from)).split(' ')[0])
-    // const totalPrice = totalDays * room?.price;
+    const [value, setValue] = useState({
+        startDate: new Date(room?.from),
+        endDate: new Date(room?.to),
+        key: 'selection',
+    })
+
+    const totalDays = parseFloat(formatDistance(new Date(room?.to), new Date(room?.from)).split(' ')[0])
+    const totalPrice = totalDays * room?.price;
 
 
     return (
@@ -16,7 +25,7 @@ const RoomsReservation = ({ room }) => {
             </div>
             <hr />
             <div className="flex justify-center">
-                <Calender />
+                <Calender value={value} />
             </div>
             <div className="space-y-4">
                 <hr />
@@ -25,7 +34,7 @@ const RoomsReservation = ({ room }) => {
             </div>
             <div className="flex justify-between items-center font-bold text-lg">
                 <p>Total</p>
-                <p>${room?.price}</p>
+                <p>${totalPrice}</p>
             </div>
         </div>
     )

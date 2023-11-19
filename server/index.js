@@ -45,6 +45,7 @@ async function run() {
 
   const database = client.db("stayVistaDb");
   const usersCollection = database.collection("users");
+  const roomsCollection = database.collection("rooms");
 
 
 
@@ -79,6 +80,28 @@ async function run() {
         console.log('Logout successful')
       } catch (err) {
         res.status(500).send(err)
+      }
+    })
+
+    // get all rooms
+    app.get('/rooms', async (req, res) => {
+      try {
+        const result = await roomsCollection.find().toArray();
+        res.send(result);
+      } catch (error) {
+        console.log(error)
+      }
+    })
+
+    // get single room
+    app.get('/rooms/:id', async (req, res) => {
+      try {
+        const id = req?.params?.id;
+        const filter = { _id: new ObjectId(id) }
+        const result = await roomsCollection.findOne(filter);
+        res.send(result);
+      } catch (error) {
+        console.log(error)
       }
     })
 
