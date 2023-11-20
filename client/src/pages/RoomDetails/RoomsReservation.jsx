@@ -14,8 +14,8 @@ const RoomsReservation = ({ room }) => {
         key: 'selection',
     })
 
-    const totalDays = parseFloat(formatDistance(new Date(room?.to), new Date(room?.from)).split(' ')[0])
-    const totalPrice = totalDays * room?.price;
+    // const totalDays = parseFloat(formatDistance(new Date(room?.to), new Date(room?.from)).split(' ')[0])
+    // const totalPrice = totalDays * room?.price;
 
 
     return (
@@ -34,7 +34,7 @@ const RoomsReservation = ({ room }) => {
             </div>
             <div className="flex justify-between items-center font-bold text-lg">
                 <p>Total</p>
-                <p>${totalPrice}</p>
+                {/* <p>${totalPrice}</p> */}
             </div>
         </div>
     )

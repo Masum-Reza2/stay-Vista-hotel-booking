@@ -1,17 +1,21 @@
+/* eslint-disable react/prop-types */
 import { DateRange } from 'react-date-range'
 import { TbFidgetSpinner } from 'react-icons/tb'
-import { categories } from '../Categories/categoriesData'
+import { categories } from '../Categories/CategoriesData'
+
 const AddRoomForm = ({
     handleSubmit,
     dates,
-    handleDates,
+    setDates,
     loading = false,
     handleImageChange,
     uploadButtonText,
 }) => {
+
+
     return (
         <div className='w-full min-h-[calc(100vh-40px)] flex flex-col justify-center items-center text-gray-800 rounded-xl bg-gray-50'>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <div className='grid grid-cols-1 lg:grid-cols-2 gap-10'>
                     <div className='space-y-6'>
                         <div className='space-y-1 text-sm'>
@@ -49,7 +53,20 @@ const AddRoomForm = ({
                             <label htmlFor='location' className='block text-gray-600'>
                                 Select Availability Range
                             </label>
-                            <DateRange rangeColors={['#F43F5E']} />
+                            {/* <DateRange
+                                editableDateInputs={true}
+
+                                rangeColors={['#F43F5E']}
+                                ranges={[dates]}
+                                onChange={handleDates}
+                                minDate={new Date()}
+                            /> */}
+                            <DateRange
+                                editableDateInputs={true}
+                                onChange={item => setDates([item.selection])}
+                                moveRangeOnFirstSelection={false}
+                                ranges={dates}
+                            />
                         </div>
                     </div>
                     <div className='space-y-6'>

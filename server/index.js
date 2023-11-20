@@ -93,8 +93,31 @@ async function run() {
       }
     })
 
+    // get specific rooms
+    app.get('/rooms/:email', async (req, res) => {
+      try {
+        const email = req?.params?.email;
+        console.log(email)
+        const filter = { 'host.email': email };
+        const result = await roomsCollection.find(filter).toArray();
+        res.send(result);
+      } catch (error) {
+        console.log(error)
+      }
+    })
+
+    app.post('/rooms', verifyToken, async (req, res) => {
+      try {
+        const roomData = req?.body;
+        const result = await roomsCollection.insertOne(roomData);
+        res.send(result);
+      } catch (error) {
+        console.log(error)
+      }
+    })
+
     // get single room
-    app.get('/rooms/:id', async (req, res) => {
+    app.get('/roomsByid/:id', async (req, res) => {
       try {
         const id = req?.params?.id;
         const filter = { _id: new ObjectId(id) }
@@ -104,6 +127,23 @@ async function run() {
         console.log(error)
       }
     })
+
+
+
+    // check role 
+    app.get('/roleCheck/:email', verifyToken, async (req, res) => {
+      try {
+        const email = req.params.email;
+        const filter = { email: email };
+        const result = await usersCollection.findOne(filter);
+        const role = result.role;
+        console.log(role);
+        res.send(role);
+      } catch (error) {
+        console.log(error)
+      }
+    })
+
 
     // Save or modify user email, status in DB
     app.put('/users/:email', async (req, res) => {

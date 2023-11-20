@@ -8,6 +8,7 @@ import RoomDetails from '../pages/RoomDetails/RoomDetails'
 import PrivateRoute from './PrivateRoute'
 import DashBoard from '../pages/DashBoard/DashBoard'
 import AddRoom from '../pages/DashBoard/Pages/AddRoom'
+import MyListings from '../pages/DashBoard/Pages/MyListings'
 
 export const router = createBrowserRouter([
   {
@@ -21,16 +22,17 @@ export const router = createBrowserRouter([
       },
       {
         path: '/room/:id', element: <PrivateRoute><RoomDetails /></PrivateRoute>,
-        loader: ({ params }) => fetch(`http://localhost:8000/rooms/${params.id}`)
+        loader: ({ params }) => fetch(`http://localhost:8000/roomsByid/${params.id}`)
       }
     ],
   },
   { path: '/login', element: <Login /> },
   { path: '/signup', element: <SignUp /> },
   {
-    path: 'dashboard', element: <DashBoard />,
+    path: 'dashboard', element: <PrivateRoute><DashBoard /></PrivateRoute>,
     children: [
-      { path: 'addRoom', element: <AddRoom /> }
+      { path: 'addRoom', element: <AddRoom /> },
+      { path: 'myListings', element: < MyListings /> }
     ]
   }
 ])

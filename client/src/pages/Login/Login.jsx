@@ -52,10 +52,6 @@ const Login = () => {
       console.log(error)
       toast.error(error.mesage)
     }
-    // >>>>>>>>>>>>>>>image Operation<<<<<<<<<<<<<
-
-
-    console.log('im waiting for the image to be upload')
 
   }
 
@@ -69,7 +65,7 @@ const Login = () => {
           </p>
         </div>
         <form
-          onClick={handleSubmit}
+          onSubmit={handleSubmit}
           noValidate=''
           action=''
           className='space-y-6 ng-untouched ng-pristine ng-valid'
